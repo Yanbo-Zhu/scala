@@ -1,28 +1,13 @@
 
+
 Freitag Tutorium 14-16 tazin 的课件和代码 
 
 ![](image/Pasted%20image%2020250502153614.png)
 
 https://git.tu-berlin.de/tenzin-lham/prog2sose25#
 
-# 1 DatenType
 
-![](image/Pasted%20image%2020250502142733.png)
-
-## 1.1 Null
-![](image/Pasted%20image%2020250502142816.png)
-
-
-![](image/Pasted%20image%2020250502142833.png)
-
-
-![](image/Pasted%20image%2020250502142921.png)
-
-
-![](image/Pasted%20image%2020250502143031.png)
-
-
-## 1.2 Aufgabe 1.1 
+# 1 Aufgabe 1.1  Daten Type 
 
 
 ![](image/Pasted%20image%2020250502143552.png)
@@ -40,33 +25,3 @@ Unify two branch
 - Scala has to **unify** both branches to a common supertype.
 - Since `Int` and `String` do **not share a more specific common type**, Scala **upcasts** both to the common supertype: `**Any**`.
     -  String ist keine UnterType von AnyVal
-
-
-
-
-# 2 for-loop und for-Comprehension
-
-
-![](image/Pasted%20image%2020250502145201.png)
-
-# 3 variable modifier val 
-
-
-final:   Wert kann nicht mehr andert werden 
-
-val in scala;  val ist nicht final 
-
-![](image/Pasted%20image%2020250502152458.png)
-
-![](image/Pasted%20image%2020250502152536.png)
-
-![](image/Pasted%20image%2020250502152613.png)
-
-
-![](image/Pasted%20image%2020250502152659.png)
-
-
-
-
-
-
