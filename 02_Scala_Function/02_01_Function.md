@@ -19,7 +19,7 @@ Funktionen können somit neben normalen Wertargumenten auch Funktionsargumente e
 
 
 
-# 1 Funktionstypen und Funktionswerte#
+# 1 Funktionstypen und Funktionswerte
 
 
 ![](image/Pasted%20image%2020250502220206.png)
@@ -40,6 +40,67 @@ Funktionen können somit neben normalen Wertargumenten auch Funktionsargumente e
 - Ausnahme: Prozeduren haben Nicht-Ausdrücke als letzte Anweisung und der Rückgabewert ist daher vom Datentyp `**Unit**`
 
 - Der Sichtbarkeitsbereich (Scope) von Variablen entspricht dem von Blockausdrücken, d.h. sie sind nur innerhalb eines Blockes sichtbar
+
+
+## 1.1 例子
+
+```
+import scala.util.Random
+
+/********************/
+/** Funktionen */
+/********************/
+
+/* A)
+  public int multiply(int x, int y) {
+    return x * y;
+  }
+ */
+
+//TODO: Scala-Äquivalent implementieren
+
+val multiply: (Int, Int) => Int = (x , y ) => {
+  x * y
+}
+
+/* B)
+  public double divide(double x, double y) {
+    if (y == 0) {
+      return 0; // eigentlich würden wir hier gerne eine Warnung ausgeben, statt einer Zahl zurückzugeben
+    }
+    return x / y;
+  }
+ */
+
+//TODO: Scala-Äquivalent implementieren
+
+// Unit ist in Scala das Äquivalent zu void in Java. the double of (x / y) will not be returned.
+// AnyVal ist ein Typ, der oberklasse .
+//  可以用 (Unit | Double)
+val divide: (Double, Double) =>  (Unit | Double) = (x , y ) => {
+  if (y == 0) {
+    println("Warning") // eigentlich würden wir hier gerne eine Warnung ausgeben, statt einer Zahl zurückzugeben
+  } else {
+    x / y
+  }
+}
+
+/* C)
+  public void printSum(int x, int y) {
+    System.out.println(x + " + " + y + " = " + (x+y));
+  }
+ */
+
+//TODO: Scala-Äquivalent implementieren
+
+val printSum: (Int, Int) => Unit = (x, y) => {
+  println(s" $x + $y = ${x + y}")
+  // println(x + " + " + y + " = " + (x+y))
+}
+
+```
+
+
 
 
 
@@ -150,6 +211,41 @@ System.out.println(result);
 - Bei anonymen Funktionen wird der Typ des Rückgabeparamters durch Typableitung bestimmt
 - Wird eine anonyme Funktion als Argument an eine Funktion höherer Ordnung übergeben, werden ihre Argumenttypen durch den Funktionstyp des aufnehmenden Arguments bestimmt und brauchen nicht angegeben zu werden
 
+
+## 7.1 例子 
+
+```scala
+
+//TODO: Scala-Äquivalent implementieren  with Anonymous Function
+
+// 1
+// unaryOpeator
+val x1 = (x: Int) => x+1
+
+// 2
+// Functional Interface: Perdicate
+val x2 = (x : Int ) => x % 2 == 1
+
+// 3
+// Functional Interface: Supplier
+val x3 = () => new Random()
+
+// 4
+// Functional Interface: Consumer
+val x4 = (s: String) => println(s.toLowerCase)
+
+// 5
+// Functional Interface: UnaryOperator
+val x5 = (s: String) => s.toLowerCase()
+
+// 6
+// Functional Interface: Perdicate
+val x6 = (s: String) => s.contains("A")
+
+// 7
+// Functional Interface: UnaryOperator oder Function
+val x7 = (s: String) => s+", "
+```
 
 # 8 Platzhaltersyntax
 
@@ -328,3 +424,4 @@ println(heavyApples)
 
 
 ![](image/Pasted%20image%2020250502222234.png)
+
