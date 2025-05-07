@@ -348,9 +348,6 @@ println(heavyApples)
 ```
 
 
-
-
-
 ```
 def makeWeightChecker(weightLimit: Int): Int => Boolean = {
   // 返回一个匿名函数，这个匿名函数使用了外部变量 weightLimit
@@ -363,13 +360,9 @@ println(checker(90))  // 输出 true，因为 90 <= 100
 println(checker(110)) // 输出 false，因为 110 > 100
 ```
 
-
 - `makeWeightChecker` 是一个返回函数的函数（高阶函数）。
-    
 - `weightLimit` 是该函数的参数，但在返回的匿名函数中被引用。
-    
 - `checker` 是一个闭包，它记住了 `weightLimit = 100`，即使 `makeWeightChecker` 已经执行完退出。
-    
 - 每次调用 `checker` 时，它都能访问并使用 `weightLimit`。
 
 
