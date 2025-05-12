@@ -19,6 +19,8 @@ Funktionen können somit neben normalen Wertargumenten auch Funktionsargumente e
 
 
 
+
+
 # 1 Funktionstypen und Funktionswerte
 
 
@@ -42,9 +44,53 @@ Funktionen können somit neben normalen Wertargumenten auch Funktionsargumente e
 - Der Sichtbarkeitsbereich (Scope) von Variablen entspricht dem von Blockausdrücken, d.h. sie sind nur innerhalb eines Blockes sichtbar
 
 
-## 1.1 例子
+## 1.1 例子 
 
+``` scala
+val f1: (Int => Int) = x => x + 1
 ```
+
+keine Funktion Hohre Ordnung
+- (Int => Int) : Eingabe mit daten type Int. Ruckgabe  mit daten type Int
+- x => x + 1:   Eingabe x , return value is x+1 
+
+----
+
+```scala
+val function: Int => (Int => Int) = factor => { x => x * factor }
+```
+
+类型说明：
+`val function: Int => (Int => Int)`
+表示：
+- `function` 是一个 **函数**，它接受一个 `Int` 类型的参数（叫做 `factor`），
+- 并返回另一个函数：这个返回的函数也接受一个 `Int`，并返回一个 `Int`。
+
+
+factor => { x => x * factor }
+- 你传入一个 `factor`，例如 5
+- 它返回一个函数 `x => x * factor`，例如：如果 `factor = 5`，那么返回的是 `x => x * 5`
+
+
+
+---
+
+```scala
+val function: ( (Int,Int) => (Int => Int)) = (factor1, factor2) => { x => x * factor1 * factor2 }
+```
+
+keine Funktion Hohre Ordnung
+- ( (Int,Int) => (Int => Int)) 
+    - (Int => Int) : Eingabe mit daten type ( Int, Int) . 
+    - Ruckgabe  ist a function (Int => Int). In this function Int ist eingabe value  data type,   Int ist the data type of return value 
+- (factor1, factor2) => { x => x * factor1 * factor2 }
+    - (factor1, factor2)  ist Eingabe
+    - x: übergebenen Argument **传递的参数** 或 **被传入的参数**
+    - x * factor1 * factor2 is Return value 
+
+---
+
+```scala
 import scala.util.Random
 
 /********************/
@@ -99,8 +145,6 @@ val printSum: (Int, Int) => Unit = (x, y) => {
 }
 
 ```
-
-
 
 
 
