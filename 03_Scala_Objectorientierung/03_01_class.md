@@ -275,12 +275,122 @@ Product.apply("iPad", "Electronics")
 
 
 
+# 4 Abstrakte Klassen
 
-# 4 Vererbung und Traits
+![](image/Pasted%20image%2020250521143535.png)
+
+
+```scala
+abstract class Car {
+	val year: Int // abstraktes Feld - MUSS überschrieben werden
+	val automatic: Boolean = true // konkretes Feld - kann überschrieben werden
+	def color: String // abstrakte Methode
+} 
+
+也可以这样定义 
+abstract class FamilyMember(val name: String, val birthDate: String, val placeOfBirth: String)
+
+
+但是 trait 中这样 () 中 定义 felder Jiubuxingle1 , 必须用 {}
 
 
 
-## 4.1 Traits
+class RedMini(val year: Int) extends Car {
+	def color = "Red" // Implementierung der abstrakten Methode aus Car
+}
+
+
+var auto2: RedMini = new RedMini(2006)
+// Es geht nicht auto2 = new BlueMini(2000)
+
+var auto: Car = new RedMini(2005)
+auto1 = new BlueMini(2000)
+
+auto1 = new Car () // 是不对的   会报错
+
+```
+
+
+
+
+
+
+# 5 Vererbung
+
+
+## 5.1 override 
+
+beim override  kann datatyp und modifier nichtverandern 
+
+```
+class Car(override val Id:Int)  extends Veh 
+
+
+val 和 int 必须和 Veh 相一致 
+```
+
+
+
+
+# 6 Traits
+
+
+![](image/Pasted%20image%2020250521144152.png)
+
+
+Problem: keine Mehrfachvererbung
+Lösung: Traits
+-4 Java Äquivalent: Interfaces
+• Traits haben abstrakte und nicht-abstrakte Methoden und Variablen
+• Wird von einer Klasse und von Traits geerbt, muss die Klasse zuerst benanot
+werden
+• Erbende Klasse muss alle abstrakten Methoden des Traits implementieren
+und alle abstrakten Variablen instanziierem
+• Nicht-abstrakte Methoden und Variablen des Traits können in der erbenden
+Klasse mit override überschrieben werden
+Nutzung:
+• Traits werden zum Vererben mit extends an die erbende Klasse angehängt -
+mehrere Traits werden mit dem Schlüsselwort with voneinander getrennt
+• Vererbender Trait Wird bei der Instanziierung des Objekts mit with
+angegeben
+
+
+## 6.1 例子 
+
+```
+trait Friend {
+  val name: String
+  def isFriend() = println(s"Your friend is $name")
+}
+
+trait Colleague {
+  val name: String
+  def isColleague() = println(s"Your colleague is $name")
+}
+
+class Human(val name: String) extends Colleague with Friend
+
+
+class Woman(override val name: String) extends Human(name)
+
+val carla = new Woman("Carla")
+
+carla.isFriend() //Your friend is Carla
+carla.isColleague() //Your colleague is Carla
+
+
+
+class Tutor(val name:String) extends Friend
+
+val loris = new Tutor("Loris") with Colleague //trait mixing during instance creation
+
+loris.isFriend() //Your friend is Loris
+loris.isColleague() //Your colleague is Loris
+```
+
+
+
+## 6.2 Traits
 
 ✅ 总览：`trait` vs `interface` 区别
 
@@ -340,7 +450,7 @@ Java 接口中：
 - 可以有 `static` 初始化代码，但仅限于静态上下文，不针对实例。
 
 
-## 4.2 Traits als Klassenbeimischungen
+## 6.3 Traits als Klassenbeimischungen
 
 
 ```
@@ -424,13 +534,13 @@ println(movie.downloadTime(75)) // Downloadzeit bei 75 Mbps
 ```
 
 
-## 4.3 Traits als Objektbeimischungen
+## 6.4 Traits als Objektbeimischungen
 
 
 ![](image/Pasted%20image%2020250514110426.png)
 
 
-# 5 Class Design: Generic 
+# 7 Class Design: Generic 
 
 
 - **Generics** sind ein Sprachfeature in Scala und Java (und anderen Sprachen), das es ermöglicht, Klassen, Methoden oder Traits so zu definieren, dass sie mit verschiedenen Typen arbeiten können
@@ -466,7 +576,7 @@ class CleaningProduct(name: String, dangerousForChildren: Boolean) extends NonFo
 
 
 
-## 5.1 Typ-schranken
+## 7.1 Typ-schranken
 
 - **Typ-Schranken** schränken die möglichen Datentypen eines Typ-Parameters ein
 - `**A<:B**` bedeutet, dass `**B**` eine **obere Schranke** (**Upper Bound**) ist und dass `**A**` vom Typ `**B**` oder ein Subtyp von `**B**` sein muss
@@ -541,7 +651,7 @@ Wozu benötige ich Lower Bounds?
 
 
 
-## 5.2 Typ-Varianz
+## 7.2 Typ-Varianz
 
 
 课上的例子 
