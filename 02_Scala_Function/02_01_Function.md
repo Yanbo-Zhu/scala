@@ -6,6 +6,13 @@ Funktionen können eigenständig existieren und sind nicht in Form von Methoden 
 Eine Funktion höherer Ordnung (Higher-order Function) ist eine Funktion, welche andere Funktionen als Argument übergeben bekommt oder als Ergebnis liefert
 Funktionen können somit neben normalen Wertargumenten auch Funktionsargumente enthalten
 
+In Scala sind Funktionen _First-Class Citizens_. Das bedeutet:
+
+- Sie können in Variablen gespeichert werden,
+- als Eingabetyp in eine Funktion übergeben werden,
+- als Rückgabetyp aus einer Funktion zurückgegeben werden.  
+    => Man kann mit ihnen umgehen wie mit Objekten.
+
 
 - 面向对象的语言将对象视为第一类公民，即对象是可以赋值给变量、作为参数传递给方法或由方法返回的值。
     

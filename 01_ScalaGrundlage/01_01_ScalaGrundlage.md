@@ -5,6 +5,10 @@
 ![](image/Pasted%20image%2020250502142733.png)
 
 
+AnyRef
+- Obertyp aller Referenztypen
+- Entspricht `java.lang.Object` in der JVM
+- Beispiele: `String`, `List`, eigene Klassen
 
 Nothing
 - `**Nothing**` ist ein besonderer Typ, der keinen Wert haben kann
@@ -202,8 +206,24 @@ Explizite Konvertierung
 - `**Unit**` umfasst nur den einen Wert `**()**` und kann somit keine Informationen speichern
 
 
+# 4 String Interpolation
 
-# 4 Blocke 
+```
+val myName = "Sama"
+println("Hello, " + myName + "!")       // ohne Interpolation
+println(s"Hallo, $myName!")             // mit Interpolation
+```
+
+Mit eingebettetem Ausdruck:
+
+```
+val a = 5
+val b = 6
+println(s"Summe von $a und $b ist ${a + b}")
+
+```
+
+# 5 Blocke 
 
 
 ```
@@ -261,7 +281,7 @@ println(total)
 - Der Block wird einmalig beim ersten Zugriff ausgeführt, nicht bei Initialisierung, und das Ergebnis wird gecached
 
 
-# 5 if and switch
+# 6 if and switch
 
 
 
@@ -315,6 +335,26 @@ val message = day match {
   case "Saturday" | "Sunday" => "Weekend!"
   case _           => "Midweek day"
 }
+
+// Pattern Matching 
+val pair = (2, 5)
+val res = pair match {
+  case (1,1) => "erstes 1, zweites 1"
+  case (x,5) => s"erstes $x, zweites 5"
+  case _ => "unbekanntes Paar"
+}
+
+
+//Pattern Matching mit Pattern Guards (
+//if (base>0 && height >0) = Pattern Guard.
+  def calculateArea(shape: Any): Double= shape match{
+    case Circle(radius) if (radius>0) => Math.PI * Math.pow(radius, 2)
+    case Rectangle(width, height) if (width>0 && height >0) => width* height
+    case Triangle(base,height) if (base>0 && height >0) => 0.5 * base * height
+    case _=> throw new IllegalArgumentException("Not a shape.")
+  }
+
+
 ```
 
 
@@ -353,7 +393,21 @@ String message = switch (day) {
 ```
 
 
-# 6 ranges 
+# 7 Tupel
+
+```
+val me: (String, Int, Boolean) = ("Sama", 21, true)
+val me2 = ("Sama", 21, true)
+
+//Zugriff erfolgt so:
+val myName = me._1
+val myAge = me._2
+println(myName)
+println(myAge)
+```
+
+
+# 8 ranges 
 
 
 ![](image/Pasted%20image%2020250502195432.png)
@@ -365,7 +419,7 @@ String message = switch (day) {
 - Ranges sind **lazy**, d.h. sie erzeugen ihre Werte erst bei Bedarf
 - Ranges werden verwendet in for-Schleifen, für die Generierung von Daten und Iterationen
 
-# 7 for-loop und for-Comprehension
+# 9 for-loop und for-Comprehension
 
 
 ![](image/Pasted%20image%2020250502145201.png)
@@ -501,7 +555,7 @@ val max = (x>y match {  // false
 
 
 
-# 8 While and Do-While 
+# 10 While and Do-While 
 
 
 ![](image/Pasted%20image%2020250502195705.png)
