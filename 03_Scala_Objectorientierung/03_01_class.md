@@ -1212,9 +1212,120 @@ println(movie.downloadTime(75)) // Downloadzeit bei 75 Mbps
 
 
 
+# 8 Abstrakt klasse + Trait 例子
 
 
-# 8 Class Design: Generic 
+1 Vererbung in Scala
+![](image/Pasted%20image%2020250601185643.png)
+
+![](image/Pasted%20image%2020250601185731.png)
+
+![](image/Pasted%20image%2020250601185744.png)
+
+```
+// i) FamilyMember
+abstract class FamilyMember {
+  val name: String
+  val birthDate: String
+  val placeOfBirth: String
+}
+
+// ii) Parents
+abstract class Parents extends FamilyMember {
+  var children: Array[FamilyMember] = Array[FamilyMember]()
+  def printChildren(): Unit = this.children.foreach(c => println(c.name))
+  def isParent: Boolean = true
+}
+
+// iii) Mother, Father, Sister
+class Mother(val name: String, val birthDate: String, val placeOfBirth: String) extends Parents
+class Father(val name: String, val birthDate: String, val placeOfBirth: String) extends Parents
+class Sister(val name: String, val birthDate: String, val placeOfBirth: String) extends FamilyMember
+```
+
+Beispielhafte Nutzung und Erklärung von Code-Snippets:
+```
+val f1: Mother = new Mother("Hildegard", "23-7-1952", "Berlin")          // korrekt
+var f2: FamilyMember = new Mother("Gisela", "4-9-1978", "Heidelberg")   // korrekt
+// val f3: Mother = new FamilyMember("Susanne", "9-10-1978", "Leverkusen") // Fehler: abstrakte Klasse
+val f4: Sister = new Sister("Moni", "19-12-1993", "Frankfurt am Main")   // korrekt
+
+f1.isParent                    // true
+// f4.isParent                // Fehler: nicht definiert in Sister
+
+f1.children = f1.children :+ f2 // korrekt
+// f2.children = f2.children :+ f4 // Fehler: children nur in Parents definiert
+
+
+```
+
+
+---
+
+2 Merfachvererbung in Scala
+
+![](image/Pasted%20image%2020250601185803.png)
+
+a) Implementieren Sie nun das in Abbildung 2 dargestellte Klassendiagramm in Scala. Nun soll die Klasse Sister von Parents erben können. Beachten Sie, dass nicht jedes Objekt vom Typ Sister vom Typ Parents erben soll, da es Schwestern gibt, die kein Elternteil sind. Hinweis: An dieser Stelle müssen Sie Traits verwenden. Analog soll die Klasse Grandparents modelliert werden. Ein Objekt vom Typ Mother kann von Grandparents erben. Die Methode printGrandChildren() gibt die Namen der Enkelkinder auf der Konsole aus. Nutzen Sie hier aus, dass Grandparents von Parents erbt. Hinweis: Zur Vereinfachung vernachlässigen wir hier Objekte vom Typ Father und Sister, die ebenfalls von GrandParents erben könnten.
+
+b) Erstellen Sie nun ein Objekt Mother, das von Grandparents erbt und ein Kind vom Typ Mother hat, das wiederum ein Kind beliebigen Typs hat. Testen Sie Ihre printGrandChildren() Implementierung.
+
+
+Mehrfachvererbung in Scala (mit Traits)
+```scala
+// Trait für Elternrolle
+trait ParentsTrait {
+  var children: Array[FamilyMember] = Array[FamilyMember]()
+  def printChildren(): Unit = this.children.foreach(c => println(c.name))
+  def isParent: Boolean = true
+}
+
+// Klassen Mother, Father (nutzen Trait statt Vererbung)
+class Mother(val name: String, val birthDate: String, val placeOfBirth: String) extends ParentsTrait
+class Father(val name: String, val birthDate: String, val placeOfBirth: String) extends ParentsTrait
+
+// Sister bleibt normale Klasse
+class Sister(val name: String, val birthDate: String, val placeOfBirth: String) extends FamilyMember
+
+// Beispiel für Sister mit Elternrolle über Trait
+val f5: Sister with ParentsTrait = new Sister("Moni", "19-12-1993", "Frankfurt am Main") with ParentsTrait
+
+
+```
+
+
+🔁 Grandparents-Trait mit printGrandchildren()
+```scala
+trait GrandParents extends ParentsTrait{
+  def printGrandChildren():Unit ={
+    this.children.foreach{
+      case p:ParentsTrait => p.printChildren()
+      case _ => //Kein Elternteil
+    }
+  }
+}
+```
+
+Verwendung: Objekt mit Enkeln
+```scala
+//Enkel
+val sis = new Sister("Anna", "22.09.2000", "Detmold")
+
+//Mutter
+val mami = new Mother("Hildegard", "22.09.1965", "Paderborn")
+
+mami.children = mami.children :+ sis
+
+//Oma
+val omi = new Mother("Gertrude", "22.09.1920", "Nieheim") with GrandParents
+omi.children = omi.children :+ mami
+
+//Test
+omi.printGrandChildren() //Ausgabe: Anna
+```
+
+
+# 9 Class Design: Generic 
 
 
 - **Generics** sind ein Sprachfeature in Scala und Java (und anderen Sprachen), das es ermöglicht, Klassen, Methoden oder Traits so zu definieren, dass sie mit verschiedenen Typen arbeiten können
@@ -1253,7 +1364,7 @@ class CleaningProduct(name: String, dangerousForChildren: Boolean) extends NonFo
 
 
 
-## 8.1 Typ-schranken
+## 9.1 Typ-schranken
 
 
 - werden eingesetzt, um Typparameter auf bestimmte Typbereiche einzuschränken
@@ -1340,7 +1451,7 @@ Wozu benötige ich Lower Bounds?
 
 
 
-## 8.2 Typ-Varianz
+## 9.2 Typ-Varianz
 
 In Scala gibt es drei Arten von Typ-Varianzen, die bestimmen, **wie sich Subtyp-Beziehungen von Typen auf generische Klassen übertragen**.
 
@@ -1447,7 +1558,7 @@ val bookShelf: Shelf[Book] = new Shelf[Product]()
 → Kontravarianz erlaubt die Verwendung von allgemeinen Typen` (Container[Animal]) `auch dort, wo ein spezifischer Typ `(Container[Dog]) `erwartet wird, was typisch für Handler, Listener oder Consumer ist, die nur verarbeiten
 
 
-### 8.2.1 Kontravarianz (-T) ist nur sinnvoll bei Konsumenten
+### 9.2.1 Kontravarianz (-T) ist nur sinnvoll bei Konsumenten
 
 Ein Typ ist kontravariant in T, wenn er Werte vom Typ T konsumiert (z. B. als Methodenparameter) – aber keine Werte vom Typ T zurückgibt oder speichert, die später typisiert weiterverwendet werden könnten.
 
@@ -1461,7 +1572,7 @@ Intuition: „Ich akzeptiere allgemeinere Typen“
 
 
 
-### 8.2.2 例子 
+### 9.2.2 例子 
 
 ![](image/Pasted%20image%2020250601164242.png)
 
@@ -1471,7 +1582,7 @@ Intuition: „Ich akzeptiere allgemeinere Typen“
 ![](image/Pasted%20image%2020250601164301.png)
 
 
-## 8.3 Verwendungsseitige Varianz in Java
+## 9.3 Verwendungsseitige Varianz in Java
 
 - Scala basiert auf **deklarationsseitiger Varianz** (**Declaration-Site Variance**), d.h. die Varianz wird direkt an der Klasse oder am Typ-Parameter festgelegt
 - Die Varianz-Regeln gelten überall, sind aber weniger flexibel, wenn man verschiedene Varianz-Anforderungen hat
@@ -1481,3 +1592,137 @@ Intuition: „Ich akzeptiere allgemeinere Typen“
 
 ![](image/Pasted%20image%2020250601164359.png)
 
+
+
+## 9.4 例子
+
+Gegeben sei die folgende Klassenhierarchie in Scala
+```
+class Being
+class Animal extends Being
+class Human extends Being
+class Vertebrates extends Animal
+class Invertebrates extends Animal
+class Mammals extends Vertebrates
+class Birds extends Vertebrates
+class Fish extends Vertebrates
+class Insects extends Invertebrates
+class Arachnids extends Invertebrates
+class Wildlife extends Mammals
+class Pet extends WildLife
+class Dog extends Pet
+class Cat extends Pet
+```
+
+
+
+1
+Erstellen Sie eine Klasse Zoo mit generischem Typ-Parameter A, der in den Klassenparametern verwendet wird. Hier soll der übergebene Klassenparameter theAnimals vom Typ `Array[A]` sein
+(a) Instanziieren Sie ein Objekt aquarium, das ein Zoo bestehend aus Objekten des Typs Fish ist.
+(b) Wiederholen Sie die Instanziierung mit dem Datentyp Human.
+
+```
+class Zoo[A](theAnimals: Array[A])
+val aquarium: Zoo[Fish] = Zoo(Array[Fish]())
+val humarium: Zoo[Human] = new Zoo[Human](Array[Human]())
+
+//val aquarium = new Zoo[Fish](Array[Fish]()) // This is invalid because Fish is a subtype of Animal, but not a supertype of Wildlife
+//val humanZoo = new Zoo[Human](Array[Human]())  // This line would cause a compile-time error because Human is not a subtype of Animal
+```
+
+2 
+Identifizieren Sie eine geeignete Typschranke in der Klassenhierarchie und deklarieren Sie die Klasse Zoo analog zu Aufgabenteil 1 mit der von Ihnen gewählten Typschranke
+
+```
+class Zoo[A <: Animal](theAnimals: Array[A]) // Upper Bound auf Animal
+```
+
+3 Nehmen Sie nun an, dass Sie keinen Zoo aus Haustieren (Pet) zulassen möchten. Wie können Sie eine Klasse Zoo mit oberer und unterer Typschranke deklarieren.
+
+```
+class Zoo[A >: Wildlife <: Animal](theAnimals: Array[A]) // Lower & Upper Bound
+
+val stadtZoo: Zoo[Wildlife] = new Zoo[Wildlife](Array[Wildlife]())
+
+val aquarium3: Zoo[Fish] = new Zoo[Fish](null) // Funktioniert nicht mehr
+```
+
+4
+Die Trennung von Human und Animal ist aus biologischer Sicht nicht korrekt. Daher haben wir die Klassenhierarchie gemäß Abbildung 1 angepasst. Zudem wurden einige Klassen, wie in der Abbildung dargestellt, um zusätzliche Eigenschaften erweitert. Welche der dargestellten Klassen müssen als abstract deklariert werden, und welche nicht?
+
+![](image/Pasted%20image%2020250601190503.png)
+
+```
+// abstract class: wenn der class nicht instanziiert werden konnen durfen und unbedingte Methoden enthalten, die von den Unterklassen implementiert werden müssen. (haben abstract methods)
+// those class should be abstract:  not Being class, da es property hasMind immer mit true ist
+
+
+// Animal has zwei abstract methods.
+// Invererbrates erbt Animal und hat noch 2  abstract methods. ( die nocht nicht volltständig implementiert sind ). so Invererbrates muss be abtrakters
+
+
+// Human class is keine abstrakte class, da es keine abstract methods hat., alle drei methods sind implementiert.
+```
+
+
+```
+class Being {
+  var hasMind = true
+}
+abstract class Animal extends Being {
+  var hasSpine: Boolean
+  var numberOfLegs: Int
+  var call: String
+}
+abstract class Vertebrates extends Animal {
+  var hasSpine = true
+}
+abstract class Invertebrates extends Animal {
+  var hasSpine = false
+}
+abstract class Mammals extends Vertebrates {}
+abstract class Birds extends Vertebrates {
+  var numberOfLegs = 2
+}
+abstract class Fish extends Vertebrates {
+  var numberOfLegs = 0
+}
+abstract class Insects extends Invertebrates {}
+abstract class Arachnids extends Invertebrates {}
+abstract class WildLife extends Mammals {}
+class Human extends Mammals {
+  var numberOfLegs = 2
+  var call = "Bla bla bla"
+}
+abstract class Pet extends WildLife {}
+class Dog extends Pet {
+  var numberOfLegs = 4
+  var call = "Wuff"
+}
+class Cat extends Pet {
+  var numberOfLegs = 4
+  var call = "Miau"
+}
+```
+
+5 
+Wie sieht die Ausgabe folgender Aufrufe aus:
+
+val a1: Animal = Human()
+val a2: Animal = Dog()
+val a3: Animal = Cat()
+println(a1.call)
+println(a2.call)
+println(a3.call)
+
+
+```
+
+val a1: Animal = Human()
+val a2: Animal = Dog()
+val a3: Animal = Cat()
+
+println(a1.call) // -> Bla bla bla
+println(a2.call) // -> Wuff
+println(a3.call) // -> Miao
+```

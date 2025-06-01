@@ -153,7 +153,79 @@ val printSum: (Int, Int) => Unit = (x, y) => {
 
 ```
 
+---
 
+```scala
+import scala.util.Random  
+  
+val name = "Scala"  
+println(s"Hello, $name!")  
+  
+/** ***************** */  
+/** Funktionen */  
+/** ***************** */  
+  
+/* A)  
+  public int multiply(int x, int y) {    return x * y;  } */  
+//TODO: Scala-Äquivalent implementieren  
+  
+val multiply: (Int, Int) => Int = (x, y) => {  
+  x * y  
+}  
+  
+/* B)  
+  public double divide(double x, double y) {    if (y == 0) {      return 0; // eigentlich würden wir hier gerne eine Warnung ausgeben, statt einer Zahl zurückzugeben    }    return x / y;  } */  
+//TODO: Scala-Äquivalent implementieren  
+  
+// Unit ist in Scala das Äquivalent zu void in Java. the double of (x / y) will not be returned.  
+// AnyVal ist ein Typ, der oberklasse .  
+//  可以用 (Unit | Double)val divide: (Double, Double) => (Unit | Double) = (x, y) => {  
+  if (y == 0) {  
+    println("Warning") // eigentlich würden wir hier gerne eine Warnung ausgeben, statt einer Zahl zurückzugeben  
+  } else {  
+    x / y  
+  }  
+}  
+  
+/* C)  
+  public void printSum(int x, int y) {    System.out.println(x + " + " + y + " = " + (x+y));  } */  
+//TODO: Scala-Äquivalent implementieren  
+  
+val printSum: (Int, Int) => Unit = (x, y) => {  
+  println(s" $x + $y = ${x + y}")  
+  // println(x + " + " + y + " = " + (x+y))  
+}  
+  
+//TODO: Scala-Äquivalent implementieren  with Anonymous Function  
+  
+// 1  
+// unaryOpeator  
+val x1 = (x: Int) => x + 1  
+  
+// 2  
+// Functional Interface: Perdicate  
+val x2 = (x: Int) => x % 2 == 1  
+  
+// 3  
+// Functional Interface: Supplier  
+val x3 = () => new Random()  
+  
+// 4  
+// Functional Interface: Consumer  
+val x4 = (s: String) => println(s.toLowerCase)  
+  
+// 5  
+// Functional Interface: UnaryOperator  
+val x5 = (s: String) => s.toLowerCase()  
+  
+// 6  
+// Functional Interface: Perdicate  
+val x6 = (s: String) => s.contains("A")  
+  
+// 7  
+// Functional Interface: UnaryOperator oder Function  
+val x7 = (s: String) => s + ", "
+```
 
 # 2 Funktionen in Scala vs Lambda-Ausdrücke in Java
 
@@ -375,6 +447,85 @@ List<Apple> heavyApplesLambda = filterApples(inventory, apple -> apple.getWeight
 - In Java werden Funktionen in Form von Lambda-Ausdrücken an Methoden übergeben
 - Da es keine Funktionstypen gibt, muss die Signatur der übergeben Funktion durch ein Functional Descriptor eines Functional Interfaces definiert werden, welches den Datentyp des aufnehmenden Arguments bildet
 - Der übergebene Lambda-Ausdruck wird dann mit dem Namen der Methode aufgerufen, der im Functional Interface definiert wurde
+
+
+## 10.1 例子
+
+
+1. Was ist eine Funktion Höherer Ordnung?
+2. Betrachten Sie die beiden Funktionen f1 und f2: Handelt es sich bei diesen um Funktionen höherer Ordnung?
+```
+val f1: (Int => Int) = x => x + 1
+val f2: (Int => (Int => Int)) = x => {
+y => x + y
+}
+```
+1. Schreiben Sie eine Funktion f3, sodaß folgendes gilt:
+```
+f3(5, f1, Integer.toString)
+// res2: String = 6
+```
+1. Implementieren Sie eine Funktion applyOperation, die zwei Ints sowie eine Funktion als Parameter akzeptiert, die Funktion auf die beiden Ints anwendet und das Ergebnis (ebenfalls vom Typ Int) zurückgibt.
+2. Implementieren Sie eine Funktion createMultiplier, die einen Faktor vom Typ Int erhält und eine Funktion zurückgibt, die diesen Faktor mit einem übergebenen Argument multipliziert
+
+
+
+```
+val name = "Scala"  
+println(s"Hello, $name!")  
+  
+val function: Int => (Int => Int) = factor => { x => x * factor }  
+  
+var multiply = function(2)  
+println(multiply(3)) // 6  
+  
+  
+// 1. Was ist eine Funktion Höherer Ordnung?  
+// Eine Funktion höherer Ordnung ist eine Funktion, die entweder eine oder mehrere Funktionen als Argumente akzeptiert oder eine Funktion zurückgibt.  
+  
+// Aufgabe 2  
+//Betrachten Sie die beiden Funktionen f1 und f2: Handelt es sich bei diesen um Funktionen höherer Ordnung?  
+val f1: (Int => Int) = x => x + 1  
+val f2: (Int => (Int => Int)) = x => {  
+  y => x + y  
+}  
+  
+  
+  
+// Aufgabe 3  
+//Schreiben Sie eine Funktion f3, sodaß folgendes gilt:  
+//  f3(5, f1, Integer.toString)  
+// res2: String = 6  
+  
+val f3: (Int, (Int => Int), (Int => String)) => String = (x, f1, f2) => {  
+  f2(f1(x))  
+}  
+f3(5, f1, Integer.toString)  
+  
+  
+// Aufgabe 4  
+//Implementieren Sie eine Funktion applyOperation, die zwei Ints sowie eine Funktion als Parameter akzeptiert, die Funktion auf die beiden Ints anwendet und das Ergebnis (ebenfalls vom Typ Int) zurückgibt.  
+val applyOperation: (Int, Int, (Int, Int) => Int) => Int = (x, y, f) => {  
+  f(x, y)  
+}  
+  
+// Beispielaufruf  
+val result = applyOperation(5, 3, (x, y) => x + y)  
+  
+// Aufgabe 5  
+//Implementieren Sie eine Funktion createMultiplier, die einen Faktor vom Typ Int erhält und eine Funktion zurückgibt, die diesen Faktor mit einem übergebenen Argument multipliziert.  
+val createMultiplier: Int => (Int => Int) = factor => {  
+  x => x * factor  
+}  
+  
+// Beispielaufruf  
+//  
+val multiplier = createMultiplier(2)  
+val result2 = multiplier(3) // 6  
+val result3 = createMultiplier(2)(3) // 6  
+  
+val mul: Int => Int = x => 3*x  // equivalent to createMultiplier(3)
+```
 
 
 # 11 Funktionen als Rückgabe

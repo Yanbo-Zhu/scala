@@ -39,11 +39,11 @@ person match {
 //age wird hier bewusst ignoriert! 
 ```
 
-# Warum nutzt man nicht immer case Klasse
+# 2 Warum nutzt man nicht immer case Klasse
 
 ![](image/Pasted%20image%2020250601182124.png)
 
-# 2 Case Klassen 的原理 
+# 3 Case Klassen 的原理 
 
 
 ```
@@ -74,7 +74,7 @@ person match {
 ```
 
 
-# 3 apply and upapply method 
+# 4 apply and upapply method 
 
 
 apply
@@ -101,7 +101,7 @@ p match {
 Auch `unapply` ist automatisch da – man nutzt sie indirekt beim Pattern Matching.
 
 
-# 4 Unterschiede zwischen Scala 2 und 3
+# 5 Unterschiede zwischen Scala 2 und 3
 
 In Scala 2
 
@@ -117,5 +117,42 @@ In Scala 3
 class Zoo[T](val animals: Array[T])
 object Zoo // apply wird automatisch generiert
 val aquarium: Zoo[Fish] = Zoo(Array[Fish]()) // kein "new", trotzdem ok!
+
+```
+
+
+# 6 例子
+
+
+1. Was ist der Unterschied zwischen case classes und regulären classes in Scala?
+2. Erstellen Sie jeweils case Klassen zu den Geometrischen Formen Kreis, Rechteck
+und dreieck welche alle notwendigen Informationen beinhalten um die Fläche der
+jeweiligen Geometrischen Form zu berechnen.
+3. Implementieren Sie die Methode calculateArea die eine Instanz dieser geometrischen
+Formen übergeben bekommt und die Fläche dieser berechnet und zurückgibt.
+4. erweitern Sie die Methode calculateArea so, dass keine geometrischen Formen mit
+Parametern kleiner gleich 0 akzeptiert werden.
+
+![](image/Pasted%20image%2020250601190834.png)
+
+```
+case class Circle(radius: Double)
+case class Rectangle(width: Double, height: Double)
+case class Triangle(base: Double, height: Double)
+
+def calculateArea(shape: Any): Double = shape match {
+  case Circle(radius) => Math.PI * Math.pow(radius, 2)
+  case Rectangle(width, height) => width * height
+  case Triangle(base, height) => 0.5 * base * height
+  case _ => throw new IllegalArgumentException("Invalid shape.")
+}
+
+def calculateArea(shape: Any): Double = shape match {
+  case Circle(radius) if radius > 0 => Math.PI * Math.pow(radius, 2)
+  case Rectangle(width, height) if width > 0 && height > 0 => width * height
+  case Triangle(base, height) if base > 0 && height > 0 => 0.5 * base * height
+  case _ => throw new IllegalArgumentException("Invalid shape.")
+}
+
 
 ```
