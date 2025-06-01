@@ -327,8 +327,11 @@ val x7 = (s: String) => s+", "
 - In Scala können Funktionen als Werte an Argumente mit dem entsprechenden Funktionstyp übergeben werden
 - Die übergebene Funktion wird dann mit dem Namen des Arguments aufgerufen
 
+Funktionen, die Funktionen als Eingabe- und/oder Rückgabeparameter haben
 
-```
+
+
+```scala
 val filterApples: (List[Apple], Apple => Boolean) => List[Apple] = (inventory, predicate) => {
   var result = List.empty[Apple]
   for (apple <- inventory) {
@@ -339,8 +342,29 @@ val filterApples: (List[Apple], Apple => Boolean) => List[Apple] = (inventory, p
   result
 }
 
+//Funktion, die wir in "applyThis" nutzen möchten
+val addThree: Int => Int = x =>{
+  x+3
+}
+
+//Higher Order Function
+val applyThis: (Int => Int, Int) => Int = (func, x) => {
+  func(x)
+}
 
 
+applyThis(addThree, 5) // 8
+
+
+
+val applyTwice: (Int => Int, Int) => Int = (f, x) => f(f(x))
+val plusOne: Int => Int = x => x + 1
+println(applyTwice(plusOne, 5)) // 7
+
+
+val withExclamation: (String => String, String) => String = (f, input) => f(input)
+val shout: String => String = s => s + "!"
+println(withExclamation(shout, "Hey")) // Hey!
 ```
 
 ```

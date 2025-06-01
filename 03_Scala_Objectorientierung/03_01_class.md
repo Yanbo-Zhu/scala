@@ -91,6 +91,8 @@ object HelloMain {
 }
 ```
 
+Warum muss main methode immer static sein?
+![](image/Pasted%20image%2020250601175437.png)
 
 
 ## 1.3 object 和 class 的区别
@@ -149,8 +151,51 @@ val c = Car("BMW")  // 使用 object Car 的 apply 方法
 
 # 2 Methoden  
 
+## 2.1 Funktionen vs. Methoden
 
-## 2.1 Dot-Notation and Opeator-Notation 
+![](image/Pasted%20image%2020250601174445.png)
+
+
+```
+//Methode in Klasse 
+class LowerCaser{
+	def toLowerCase(s:String): String = s.toLowerCase
+}
+
+//Instanz erstellen
+val lowerInstance = new LowerCaser()
+
+//Methode auf Instanz aufrufen
+lowerInstance.toLowerCase("JHABFJBHAF")
+
+
+//Funktion dagegen:
+val toLowerCase: (String => String) = (s) => s.toLowerCase
+
+//Aufrufe von Funktion eigenständig möglich
+toLowerCase("FUNKTION") //funktion
+```
+
+
+
+----
+
+Ermöglicht Umwandlung: Methode → Funktion
+Sinn: Methoden können dann ebenfalls wie Werte behandelt und übergeben werden
+
+```scala
+class Calculator {
+  def add(x: Int, y: Int): Int = x + y  // Dies ist eine Methode
+}
+
+val calc = new Calculator
+val addFunc = calc.add _ // Dies ist eine Funktion, erzeugt durch Eta-Expansion
+
+addFunc(3,2) //5
+```
+
+
+## 2.2 Dot-Notation and Opeator-Notation 
 
 - Bei der **Dot-Notation** wird die Methode über einen Punkt nach dem Objekt aufgerufen
 - Operatoren wie `**+**`, `**-**`, `**/**`, und `**==**` sind als Methoden auf Objekten implementiert
@@ -176,12 +221,29 @@ val d2 = p discounted 10.0
 
 
 
-## 2.2 Klassenparamter und Primärkonstruktor
+## 2.3 Klassenparamter und Primärkonstruktor
 
 
 - **Klassenparameter** sind Eingabevariablen, die bei der Instanziierung der Klasse übergeben werden, und die automatisch zu Feldern der Klasse werden
 - Ergänzung von Klassenparametern mit `**val**` oder **`var`** macht sie zu Feldern, die `**public**` sind, also von außerhalb der Klasse zugreifbar
 - Klassenparameter, die ohne `**val**` oder `**var**` deklariert werden, sind `**private val**` und von außerhalb der Klasse nicht zugreifbar und nach der Instanziierung auch nicht mehr veränderbar (weil `**val**`)
+
+![](image/Pasted%20image%2020250601174911.png)
+
+```
+//public:
+class PublicUser (val name: String){
+
+}
+
+//private: 
+class PrivateUser (name: String){
+
+}
+```
+
+---
+
 
 - Jede Klasse hat einen **primären Konstruktor** (**Primary Constructor**), der implizit durch die Klassenparameter und den Rumpf der Klasse gegeben ist
 - Keine explizite Definition des Konstruktors wie in Java (vgl. vorherige Folie)
@@ -190,7 +252,22 @@ val d2 = p discounted 10.0
 
 ![](image/Pasted%20image%2020250601155612.png)
 
-### 2.2.1 Argument 默认是 val 还是 var  in class definition
+
+
+
+
+
+
+
+### 2.3.1 Argument  默认是 val 还是 var  in class definition
+
+
+Sichtbarkeit von Variablen im 
+- `var` → **public**, veränderlich
+- `val` → **public**, unveränderlich
+- `Keine` Modifikatoren → **private**, veränderlich
+- `private val` → **private**, unveränderlich
+
 
 在 Scala 的类定义中，默认既不是 val 也不是 var。如果你在类构造函数中写参数而不加 val 或 var，这些参数：
 - 只在 构造函数中有效（即仅限于 class 的构造阶段）
@@ -216,7 +293,7 @@ class Person(name: String)
 |`var name: String`|✅ 是|✅|✅|
 
 
-### 2.2.2 var und val 的区别
+### 2.3.2 var und val 的区别
 
 `val`：不可变变量（immutable）
 - 定义后不能被修改（像 `final` 或 `const`）
@@ -248,7 +325,7 @@ println(s.studyField) // ❌ 错误：不能访问（不是成员）
 
 
 
-## 2.3 Zugriffsmodifikatoren
+## 2.4 Zugriffsmodifikatoren
 
 
 - **Zugriffsmodifikatoren** in Scala steuern, wo auf Felder und Methoden einer Klasse zugegriffen darf
@@ -297,7 +374,7 @@ class Product(val basePrice: Double) {
 - Durch `**private[this]**` kann der Compiler garantieren, dass ein Feld niemals von einer anderen Instanz berührt wird, was die Nebenläufigkeit vereinfacht
 - Java implementiert die Instanzunterscheidung nicht
 
-## 2.4 Sekundärkonstruktoren
+## 2.5 Sekundärkonstruktoren
 
 
 - Eine Klasse hat optional **Sekundärkonstruktoren**
@@ -338,7 +415,7 @@ println(p2.info())
 println(p3.info())
 ```
 
-## 2.5 Methoden ohne Argumente
+## 2.6 Methoden ohne Argumente
 
 ```
 class Product(val basePrice: Double) {
@@ -372,7 +449,7 @@ class Product(val basePrice: Double) {
 - Der Rückgabewert der Methode wird immer dann berechnet, wenn sie aufgerufen wird
 
 
-## 2.6 Getter- und Setter-Methoden
+## 2.7 Getter- und Setter-Methoden
 
 
 ```
@@ -427,7 +504,7 @@ println(p.price)  // bleibt 49.99
 - Der Wert der zugrundeliegenden Variable wird in einer mit `**private**` gekennzeichneten Hilfsvariable `**_name**` gespeichert
 
 
-## 2.7 Methodenüberladung
+## 2.8 Methodenüberladung
 
 
 ```
@@ -464,7 +541,7 @@ println(p.info("€"))
 - Unterschiedliche Rückgabetypen bei zwei überladenen Methoden reichen nicht, d.h. die Eingabeparameter müssen sich unterscheiden
 
 
-## 2.8 Optionen für Methodenparameter
+## 2.9 Optionen für Methodenparameter
 
 ![](image/Pasted%20image%2020250601161305.png)
 - Parameter können in Scala auch über geschweifte Klammern übergeben werden, was mehrzeilige Argumente mit Berechnungen ermöglich
@@ -477,6 +554,10 @@ println(p.info("€"))
 
 
 # 3 companion Object
+
+
+- Java: `static`
+- Scala: **Companion `object`**
 
 - Scala erlaubt keine statischen Methoden innerhalb von Klassen
 - Alternative: Companion-Objekte
@@ -512,10 +593,89 @@ object Product {
     counter
   }
 }
+
 ```
 
 
-## 3.1 例子 
+## 3.1 warum Companion Objekte
+
+1 Factory Methods (z. B. apply)
+Damit kann man Objekte erzeugen, ohne new zu schreiben.
+```
+class Person(val name: String)
+
+object Person {
+  def apply(name: String): Person = new Person(name)
+}
+
+val p = Person("Alice") // statt: new Person("Alice")
+
+```
+Use Case: Elegantere Syntax, oft genutzt bei Case Classes oder API-Design.
+
+2  Konstanten und Hilfsfunktionen
+Companion-Objekte können val, def und import enthalten, die nicht an die Instanz gebunden sind.
+
+```
+class Circle(val radius: Double)
+
+object Circle {
+  val PI = 3.14159
+  def area(c: Circle): Double = PI * c.radius * c.radius
+}
+```
+
+
+Use Case: Trennung von Instanzdaten (in der Klasse) und stateless Logik (im Objekt).
+
+3 Pattern Matching (mit unapply)
+Companion-Objekte implementieren unapply für Pattern Matching.
+```
+case class Email(user: String, domain: String)
+
+val e = Email("bob", "mail.com")
+e match {
+  case Email(u, d) => println(s"user: $u, domain: $d")
+}
+```
+
+Use Case: Ermöglicht Destrukturierung in match-Ausdrücken.
+
+
+4 Type-Class Pattern (z. B. Ordering, Show, etc.)
+Companion-Objekte enthalten oft implizite Instanzen für Typklassen.
+
+```
+object MyType {
+  implicit val myOrdering: Ordering[MyType] = ...
+}
+```
+
+Use Case: Ermöglicht automatische Auswahl von Verhalten basierend auf Typ.
+
+
+5 Singletons mit Zugriff auf private Klassenmember
+Da Klasse und Companion im gleichen Scope liegen, können sie private Members teilen.
+
+```
+class Secret(val data: String) {
+  private def hidden = "secret"
+}
+
+object Secret {
+  def reveal(s: Secret): String = s.hidden // Zugriff erlaubt
+}
+
+
+```
+
+Use Case: Ermöglicht gezielten Zugriff auf private API ohne sie öffentlich zu machen.
+
+
+6 
+![](image/Pasted%20image%2020250601175309.png)
+
+## 3.2 例子 
 
 ```scala
 //1. Erstellen Sie eine Student-Klasse, in der jeder Student einen Namen, ein Alter und eine Studienrichtung hat. Der Primärkonstruktor soll den Namen, das Alter und die  Studienrichtung beim Erstellen eines Objekts erwarten. Die Klassenparameter sollen dabei private val sein.  
@@ -583,7 +743,7 @@ Einsatzgebiete
 | Access-Control                    | Private Factory-Methoden erzwingen interne Regeln                     | nur erlaubt Instanzen erzeugen         |
 
 
-## 3.2 Factory Method: Companion-Objekte und innere Klassen**    
+## 3.3 Factory Method: Companion-Objekte und innere Klassen**    
 
 工厂方法是一种用于封装对象创建逻辑的模式。用户不直接通过 new 创建对象，而是通过一个静态方法（Scala 中通常是 apply 方法）来创建。
 在中文中，“工厂方法”（Factory Method）是一种常见的设计模式，用于通过一个静态方法来创建类的实例，而不是直接调用构造函数。在你的 Product 类中，apply 方法就相当于工厂方法。
@@ -665,7 +825,7 @@ println(p2.info())                 // 输出: Product[2]: 电动牙刷 costs $99
 ```
 
 
-## 3.3 什么时候用 new 
+## 3.4 什么时候用 new 
 
 
 在 Scala 中，**你可以用 `new` 创建对象**，但如果定义了伴生对象（`object`）中的 `apply` 方法，**通常推荐用 `apply` 这种“工厂方法”代替 `new`**，因为它更灵活、可读性更高、也更易于扩展。
@@ -701,6 +861,11 @@ innere oder eingebettete Klassen
 
 # 4 Vererbung
 
+
+![](image/Pasted%20image%2020250601181124.png)
+
+- Vererbung von Klassen erfolgt mit dem Schlüsselwort `extends`, Vererbung von Traits (ähnlich wie Interfaces) über `extends` und `with`
+- Wenn eine abstrakte Methode übernommen wurde, muss diese auch in der Subklasse implementiert werden
 
 - Eine Klasse (**Subclass**, **Unterklasse**) kann von maximal einer anderen Klasse (**Superclass**, **Oberklasse**) mit dem Schlüsselwort `**extends**` erben
 - Der Konstruktor der vererbenden Klasse muss angegeben werden und wird bei der Instanziierung aufgerufen 
@@ -746,7 +911,18 @@ println(x.info())
 ```
 
 
-# 5 Abstrakte Klassen
+# 5 Warum kann man var nicht überschreiben?
+
+
+![](image/Pasted%20image%2020250601181523.png)
+
+![](image/Pasted%20image%2020250601181538.png)
+
+
+
+
+
+# 6 Abstrakte Klassen
 
 - Eine **abstrakte Klasse** ist nicht vollständig implementiert, sie ist eine unvollständige Bauanleitung für Objekte
 - Sie kann abstrakte Felder und Methoden enthalten, und sie kann nicht direkt instanziiert werden
@@ -756,10 +932,36 @@ println(x.info())
 - Die erbenden Unterklassen müssen die abstrakten Elemente implementieren
 
 
+- können **nicht instanziiert** werden.
+- enthalten mindestens **eine körperlose Methode** (ohne Implementierung)
+- eine Klasse, die von einer abstrakten Klasse erbt, **muss** alle abstrakten Methoden implementieren (überschreiben).
+- bereits implementierte Methoden in der abstrakten Klasse **können** überschrieben werden, **müssen aber nicht**.
+
+
 ![](image/Pasted%20image%2020250521143535.png)
+
+![](image/Pasted%20image%2020250601181223.png)
+
+
+
 
 ![](image/Pasted%20image%2020250601162304.png)
 
+```
+abstract class Car {
+  val year: Int
+  val automatic: Boolean = false
+  def colour: String
+}
+class BMW(val year: Int) extends Car {
+  def colour: String = "red"
+  override val automatic: Boolean = true
+}
+```
+
+- die Methode `colour` **muss** überschrieben werden, da sie abstrakt ist.
+- das Attribut `automatic` **kann** überschrieben werden.
+- der Konstruktor `val year: Int` übernimmt die Implementierung des abstrakten `val` in Car.
 
 
 ```scala
@@ -795,10 +997,15 @@ auto1 = new Car () // 是不对的   会报错
 
 
 
-# 6 Traits
+# 7 Traits
 
 
 ![](image/Pasted%20image%2020250521144152.png)
+
+![](image/Pasted%20image%2020250601181236.png)
+
+
+![](image/Pasted%20image%2020250601181400.png)
 
 
 Problem: keine Mehrfachvererbung
@@ -821,7 +1028,7 @@ Nutzung:
 - Die abstrakten Felder und Methoden eines Traits müssen von der aufnehmenden Klasse implementiert werden 
 - Eine Klasse kann mehrere Traits gleichzeitig verwenden, **Mehrfachvererbung** über Traits ist erlaubt
 
-## 6.1 例子 
+## 7.1 例子 
 
 ```
 trait Friend {
@@ -856,9 +1063,7 @@ loris.isColleague() //Your colleague is Loris
 
 
 
-## 6.2 Traits
-
-✅ 总览：`trait` vs `interface` 区别
+## 7.2 `trait` vs `interface` 区别
 
 |特性|Scala `trait`|Java `interface`（尤其是 Java 8+）|
 |---|---|---|
@@ -916,7 +1121,7 @@ Java 接口中：
 - 可以有 `static` 初始化代码，但仅限于静态上下文，不针对实例。
 
 
-## 6.3 Traits als Klassenbeimischungen
+## 7.3 Traits als Klassenbeimischungen
 
 
 ```
@@ -1000,7 +1205,7 @@ println(movie.downloadTime(75)) // Downloadzeit bei 75 Mbps
 ```
 
 
-## 6.4 Traits als Objektbeimischungen
+## 7.4 Traits als Objektbeimischungen
 
 
 ![](image/Pasted%20image%2020250514110426.png)
@@ -1009,13 +1214,16 @@ println(movie.downloadTime(75)) // Downloadzeit bei 75 Mbps
 
 
 
-# 7 Class Design: Generic 
+# 8 Class Design: Generic 
 
 
 - **Generics** sind ein Sprachfeature in Scala und Java (und anderen Sprachen), das es ermöglicht, Klassen, Methoden oder Traits so zu definieren, dass sie mit verschiedenen Typen arbeiten können
 - So wie eine Methode Werte als Parameter bekommen kann, bekommt eine generische Klasse oder Methoden Typ-Parameter
 - Typ-Parameter werden durch Großbuchstaben in eckigen Klammern repräsentiert, die immer vor runden oder geschweiften Klammern stehen
 - ==Mit Hilfe von Generics schreibt man Code nur einmal und verwendet ihn für viele Typen – mit voller Typsicherheit, die bereits beim Kompilieren geprüft wird==
+
+
+![](image/Pasted%20image%2020250601172502.png)
 
 ![](image/Pasted%20image%2020250514110947.png)
 
@@ -1045,12 +1253,24 @@ class CleaningProduct(name: String, dangerousForChildren: Boolean) extends NonFo
 
 
 
-## 7.1 Typ-schranken
+## 8.1 Typ-schranken
+
+
+- werden eingesetzt, um Typparameter auf bestimmte Typbereiche einzuschränken
+- besonders nützlich bei Vererbungshierarchien:
 
 - **Typ-Schranken** schränken die möglichen Datentypen eines Typ-Parameters ein
 - `**A<:B**` bedeutet, dass `**B**` eine **obere Schranke** (**Upper Bound**) ist und dass `**A**` vom Typ `**B**` oder ein Subtyp von `**B**` sein muss
 - `**A>:B**` bedeutet, dass `**B**` eine **untere Schranke** (**Lower Bound**) ist und dass `**A**` vom Typ `**B**` oder ein Supertyp von `**B**` sein muss
 - Typ-Schranken werden direkt beim Typ-Parameter einer Klasse oder eines Traits oder in Methodensignaturen gesetzt
+
+![](image/Pasted%20image%2020250601172550.png)
+
+![](image/Pasted%20image%2020250601172559.png)
+
+
+---
+
 
 ```
 class Shelf[T] {
@@ -1120,8 +1340,9 @@ Wozu benötige ich Lower Bounds?
 
 
 
-## 7.2 Typ-Varianz
+## 8.2 Typ-Varianz
 
+In Scala gibt es drei Arten von Typ-Varianzen, die bestimmen, **wie sich Subtyp-Beziehungen von Typen auf generische Klassen übertragen**.
 
 |变型类型|Scala 写法|子类型关系举例|用于|
 |---|---|---|---|
@@ -1129,11 +1350,25 @@ Wozu benötige ich Lower Bounds?
 |逆变 Contravariant|`-A`|`Handler[Animal] <: Handler[Cat]`|输入（函数参数）|
 |不变 Invariant|`A`|无子类关系|可变/完全匹配场景|
 
+![](image/Pasted%20image%2020250601172646.png)
 
+![](image/Pasted%20image%2020250601181852.png)
 
 
 在 Scala 中，“**协变（Covariance）**”、“**逆变（Contravariance）**” 和 “**不变（Invariance）**” 是泛型类型参数的三种变型方式，它们用来控制泛型在 **子类型关系中的行为**。以下是中文解释：
 
+
+
+Es findet **keine** Übertragung der Subtyp-Beziehung statt:  
+`Container[A]` und `Container[B]` sind **unabhängig**, auch wenn `A <: B` gilt.  
+Ist der **Default**, wenn keine Varianz-Angabe gemacht wird
+
+```
+// Keine Subtyp-Beziehung: Box[Dog] und Box[Animal] sind inkompatibel, auch wenn Dog <: Animal
+class Box[T](var inhalt: T)
+val dogBox: Box[Dog] = new Box(new Dog)
+// val animalBox: Box[Animal] = dogBox  // nicht erlaubt
+```
 
 ![](image/Pasted%20image%2020250514113637.png)
 
@@ -1152,6 +1387,7 @@ val productShelf: Shelf[Product] = new Shelf[Book](List(new Book("Scala", "Alice
 - Das gibt maximale Typsicherheit, erlaubt aber weniger Flexibilität
 
 
+
 ---
 
 
@@ -1160,7 +1396,7 @@ val productShelf: Shelf[Product] = new Shelf[Book](List(new Book("Scala", "Alice
 
 ` Box[Cat] 中提取一个 cat 可以放到 Box[Animal] 里面去. Box[Animal] 中提取一个值 不能放到 Box[Cat]  中`
 
-
+→ Nur lesende Operationen erlaubt! (Listen sind immutable!)
 
 ```
 class Shelf[+T](items: List[T]) {
@@ -1207,8 +1443,25 @@ val bookShelf: Shelf[Book] = new Shelf[Product]()
 - Man darf über eine Variable vom Typ `**Shelf[Book]**` Bücher in ein `**Shelf[Product]**` legen, aber keine Bücher aus diesem Regal lesen (nicht typsicher, da `**Shelf[Product]**` auch Dinge enthält, die keine Bücher sind)
 - Kontravarianz erlaubt die Verwendung von allgemeinen Typen (`**Shelf[Product]**`) auch dort, wo ein spezifischer Typ (`**Shelf[Book]**`) erwartet wird, was typisch für Handler, Listener oder Consumer ist, die nur verarbeiten
 
+→ Nur schreibende Operationen erlaubt!
+→ Kontravarianz erlaubt die Verwendung von allgemeinen Typen` (Container[Animal]) `auch dort, wo ein spezifischer Typ `(Container[Dog]) `erwartet wird, was typisch für Handler, Listener oder Consumer ist, die nur verarbeiten
 
-### 7.2.1 例子 
+
+### 8.2.1 Kontravarianz (-T) ist nur sinnvoll bei Konsumenten
+
+Ein Typ ist kontravariant in T, wenn er Werte vom Typ T konsumiert (z. B. als Methodenparameter) – aber keine Werte vom Typ T zurückgibt oder speichert, die später typisiert weiterverwendet werden könnten.
+
+Kontravarianz (-T) ist nützlich für „Konsumenten von T“ – Dinge, die T verarbeiten, aber nicht zurückgeben oder speichern.
+
+
+Intuition: „Ich akzeptiere allgemeinere Typen“
+![](image/Pasted%20image%2020250601182216.png)
+
+![](image/Pasted%20image%2020250601182229.png)
+
+
+
+### 8.2.2 例子 
 
 ![](image/Pasted%20image%2020250601164242.png)
 
@@ -1218,7 +1471,7 @@ val bookShelf: Shelf[Book] = new Shelf[Product]()
 ![](image/Pasted%20image%2020250601164301.png)
 
 
-## 7.3 Verwendungsseitige Varianz in Java
+## 8.3 Verwendungsseitige Varianz in Java
 
 - Scala basiert auf **deklarationsseitiger Varianz** (**Declaration-Site Variance**), d.h. die Varianz wird direkt an der Klasse oder am Typ-Parameter festgelegt
 - Die Varianz-Regeln gelten überall, sind aber weniger flexibel, wenn man verschiedene Varianz-Anforderungen hat

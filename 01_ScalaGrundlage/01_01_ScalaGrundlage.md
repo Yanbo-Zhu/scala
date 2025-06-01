@@ -395,6 +395,8 @@ String message = switch (day) {
 
 # 7 Tupel
 
+![](image/Pasted%20image%2020250601173811.png)
+
 ```
 val me: (String, Int, Boolean) = ("Sama", 21, true)
 val me2 = ("Sama", 21, true)
@@ -407,19 +409,29 @@ println(myAge)
 ```
 
 
-# 8 ranges 
+# 8 Union Type
+
+Ein Union Type in Scala erlaubt, dass ein Wert mehrere mögliche Typen haben kann.
+Man schreibt das mit einem senkrechten Strich (|).
+
+```
+def example(x: Int | String) = println(x)
+```
+
+
+# 9 ranges 
 
 
 ![](image/Pasted%20image%2020250502195432.png)
 
-
+![](image/Pasted%20image%2020250601173329.png)
 
 - Ein **Range** ist eine sequentielle Folge von Zahlen, die einen **Startwert**, einen **Endwert** und optional einen **Schritt** enthält
 - Ranges können inklusiv (`**to**`) oder exklusiv (`**until**`) definiert werden
 - Ranges sind **lazy**, d.h. sie erzeugen ihre Werte erst bei Bedarf
 - Ranges werden verwendet in for-Schleifen, für die Generierung von Daten und Iterationen
 
-# 9 for-loop und for-Comprehension
+# 10 for-loop und for-Comprehension
 
 
 ![](image/Pasted%20image%2020250502145201.png)
@@ -555,7 +567,7 @@ val max = (x>y match {  // false
 
 
 
-# 10 While and Do-While 
+# 11 While and Do-While 
 
 
 ![](image/Pasted%20image%2020250502195705.png)
