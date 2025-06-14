@@ -55,6 +55,9 @@ In Scala sind Funktionen _First-Class Citizens_. Das bedeutet:
 
 ``` scala
 val f1: (Int => Int) = x => x + 1
+
+val result = f1(5)   // result = 6
+println(result)
 ```
 
 keine Funktion Hohre Ordnung

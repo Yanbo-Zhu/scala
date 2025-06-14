@@ -551,8 +551,6 @@ println(p.info("€"))
 
 
 
-
-
 # 3 companion Object
 
 
@@ -665,7 +663,6 @@ class Secret(val data: String) {
 object Secret {
   def reveal(s: Secret): String = s.hidden // Zugriff erlaubt
 }
-
 
 ```
 
@@ -825,7 +822,13 @@ println(p2.info())                 // 输出: Product[2]: 电动牙刷 costs $99
 ```
 
 
-## 3.4 什么时候用 new 
+
+## 3.4 apply and upapply method 
+
+
+### 3.4.1 apply()
+
+什么时候不用 new 
 
 
 在 Scala 中，**你可以用 `new` 创建对象**，但如果定义了伴生对象（`object`）中的 `apply` 方法，**通常推荐用 `apply` 这种“工厂方法”代替 `new`**，因为它更灵活、可读性更高、也更易于扩展。
@@ -856,6 +859,169 @@ innere oder eingebettete Klassen
 - Klassen können andere Klassen enthalten (**innere Klassen**, **eingebettete Klassen**, **Nested Classes**)
 - Jede Instanz der äußeren Klasse hat dann eine eigene innere Klasse
 - Innere Klassen unterschiedlicher Instanzen der äußeren Klasse sind nicht zueinander kompatibel
+
+
+
+---
+
+定义在 Companion Object 中的 `apply` 方法允许我们 **不用显式写 `new`** 来创建对象。
+
+- 更简洁的构造对象
+- 可以返回 case class 或隐式转换等结果    
+- 可自定义创建逻辑（工厂模式）
+
+```
+class Person(val name: String, val age: Int)
+
+object Person {
+  def apply(name: String, age: Int): Person = new Person(name, age)
+}
+
+// 使用：
+val p = Person("Alice", 30)  // 自动调用 Person.apply(...)
+
+// 等价于 
+val p = new Person("Alice", 30)
+```
+
+
+---
+
+
+apply
+- Wird im **Companion Object** automatisch generiert
+- Ermöglicht die Objekterstellung **ohne `new`**
+- Wird aufgerufen, wenn man schreibt: `Person("bercan")`
+```
+case class Person(name: String)
+val bercan = Person("bercan") // ruft Person.apply("bercan") auf
+```
+Man sieht `apply` nicht direkt, aber sie steckt im Companion Object der Klasse.
+
+
+### 3.4.2 unapply()
+
+
+`unapply` 是一种**提取器方法**，允许你在 `match` 表达式中将对象解构为组成部分。
+- `unapply` 返回 `Option[(...)]`，表示是否匹配成功
+- 用于模式匹配时，`case Person(...)` 自动调用 `Person.unapply(...)`
+
+```
+object Person {
+  def unapply(p: Person): Option[(String, Int)] =
+    Some((p.name, p.age))
+}
+
+val p = Person("Bob", 25)
+
+p match {
+  case Person(n, a) => println(s"Name: $n, Age: $a")
+}
+
+```
+
+
+
+ `unapply`
+- Macht die Klasse **pattern-matchable**
+- Gibt bei erfolgreichem Match die Felder als `Some(...)` zurück
+```
+p match {
+  case Person(n) => println(s"Name: $n") // ruft Person.unapply(p) auf
+}
+```
+
+Auch `unapply` ist automatisch da – man nutzt sie indirekt beim Pattern Matching.
+
+
+#### 3.4.2.1 Option数据类型 和unapply() 的例子 
+
+In der vergangenen Woche haben wir das Konzept der case class kennengelernt und die drei case Klassen Circle, Rectangle und Triangle implementiert und instanziiert. Außerdem haben wir die Methode calculateArea mithilfe von Pattern Matching implementiert. Laden Sie dazu die bereitgestellte Vorlage herunter und passen Sie sie gegebenenfalls an.
+1. Die Methode calculateArea gibt aktuell einen Double-Wert zurück, sofern die Eingabe vom Typ Circle, Rectangle oder Triangle ist. Andernfalls wirft die Methode eine Ausnahme, was zum Absturz des Programms führt. Passen Sie die Methode so an, dass sie bei unbekannten Eingaben nicht abstürzt. Nutzen Sie hierfür den generischen Container` Option[T]`.
+2. Circle, Rectangle und Triangle sollten nun als reguläre Klassen deklariert wer- den. Ändert sich etwas im Code? treten irgenwelche Fehler auf?
+3. Erweitern Sie nun die Klassen um Companion Objekte und geeignete unapply-Methoden. Wozu brauchen wir die unapply-Methode im Companion Object.
+
+
+```scala
+  
+// Circle, Rectangle und Triangle sollten nun als regul鋜e Klassen deklariert wer-  
+//den. 膎dert sich etwas im Code? treten irgenwelche Fehler auf?  
+// wenn nicht case class, dann keine Pattern Matching, kein Unapply-Methoden automatisch gerenerated  
+  
+//case class Circle(val radius: Double)  
+//case class Rectangle(val width: Double, val height: Double)  
+//case class Triangle(val base: Double, val height: Double)  
+class Circle(val radius: Double)  
+class Rectangle(val width: Double, val height: Double)  
+class Triangle(val base: Double, val height: Double)  
+  
+// Erweitern Sie nun die Klassen um Companion Objekte und geeignete unapply-Methoden.  
+//Wozu brauchen wir die unapply-Methode im Companion Object  
+object Circle {  
+  def apply(radius: Double): Circle = new Circle(radius)  
+  def unapply(circle: Circle): Option[Double] = Some(circle.radius)  // ????? Circle ?? case Circle(r) ???????????? unapply??? Some(radius)?????? radius ????? r?  
+  // case Circle(r) => println(s"????? $r") .   ????? Circle.unapply(c) , Circle(r) ?????? Circle.unapply(c) ? ?? Some(10.0). then return r = 10.0}  
+  
+object Rectangle {  
+  def unapply (rectangle: Rectangle): Option[(Double, Double)] =  
+    Some((rectangle.width, rectangle.height))  
+}  
+  
+object Triangle {  
+  def unapply(triangle: Triangle): Option[(Double, Double)] =  
+    Some((triangle.base, triangle.height))  
+}  
+  
+val c1 = new Circle(3)  
+val r1 = new Rectangle(4, 5)  
+val t1 = new Triangle(3, 1)  
+  
+  
+//def calculateArea(shape: Any): Double = shape match {  
+//  case Circle(radius) => Math.PI * Math.pow(radius, 2)  
+//  case Rectangle(width, height) => width * height  
+//  case Triangle(base, height) => 0.5 * base * height  
+//  case _ => throw new IllegalArgumentException()  
+//}  
+  
+//Die Methode calculateArea gibt aktuell einen Double-Wert zur點k, sofern die  
+//  Eingabe vom Typ Circle, Rectangle oder Triangle ist. Andernfalls wirft die  
+//Methode eine Ausnahme, was zum Absturz des Programms f黨rt. Passen Sie die Methode  
+//  so an, dass sie bei unbekannten Eingaben nicht abst黵zt. Nutzen Sie hierf黵 den generischen//Container Option[T]  
+  
+def calculateArea(shape: Any): Option[Double] = shape match {  
+  case Circle(radius) => Some(Math.PI * Math.pow(radius, 2))  
+  case Rectangle(width, height) => Some(width * height)  
+  case Triangle(base, height) => Some(0.5 * base * height)  
+  case _ => None  
+}  
+  
+calculateArea(5) // wirft eine Exception
+```
+
+
+
+
+
+### 3.4.3 Unterschiede zwischen Scala 2 und 3
+
+In Scala 2
+
+    unapply wird aktiv genutzt für Pattern Matching
+
+In Scala 3
+
+    Der Compiler übernimmt mehr Arbeit automatisch
+    Auch nicht-case Klassen bekommen apply im Companion Object
+    Beispiel:
+
+```
+class Zoo[T](val animals: Array[T])
+object Zoo // apply wird automatisch generiert
+val aquarium: Zoo[Fish] = Zoo(Array[Fish]()) // kein "new", trotzdem ok!
+
+```
+
 
 
 
