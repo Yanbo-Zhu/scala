@@ -1000,9 +1000,6 @@ calculateArea(5) // wirft eine Exception
 ```
 
 
-
-
-
 ### 3.4.3 Unterschiede zwischen Scala 2 und 3
 
 In Scala 2
