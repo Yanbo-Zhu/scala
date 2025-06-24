@@ -1,4 +1,9 @@
 
+Werte, die in einem Kontext gespeichert sind 
+- Datencontiner mit Rgelen 
+    - Erlaubte Werte in einen Kontext zu verpacken 
+    - Verkette Berechnungen auf die Werte durchzufuhren 
+
 
 在 Scala 中，**Monad（单子）** 是函数式编程中一个非常核心的概念，用来封装计算过程中的“上下文”——比如可能失败的计算、异步计算、可选值等等。虽然它听起来抽象，但你已经在用它了，比如 `Option`、`Future`、`Either` 这些类型其实就是 Monad。
 
@@ -37,4 +42,23 @@ Monad 的意义
 3. **结合律**：`m.flatMap(f).flatMap(g) == m.flatMap(x => f(x).flatMap(g))`
 
 
+
+
+# 1 Beispiel
+
+```scala
+  
+def half(x: Int): Option[Int] =  
+  if (x % 2 == 0) Some(x / 2) else None  
+  
+val numbers = List(2, 3, 4, 5, 6)  
+  
+val result1 = numbers.map(half)  
+  
+// data type of result1 : List[Option[Int]] = List(Some(1), None, Some(2), None, Some(3))  
+  
+  
+val result2 = numbers.flatMap(half)  
+// flatMap : // wendet die Funktion `half` auf jedes Element der Liste an und flacht das Ergebnis ab, indem es die `None`-Werte entfernt.    FlatMap kombiniert die Schritte `map` und `filter` in einem Schritt..   FlatMap flat the option // data type of result2 : List[Int] = List(1, 2, 3)
+```
 
