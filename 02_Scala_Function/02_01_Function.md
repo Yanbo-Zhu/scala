@@ -531,6 +531,60 @@ val mul: Int => Int = x => 3*x  // equivalent to createMultiplier(3)
 ```
 
 
+```scala
+//1 Schreiben Sie eine Funktion applyTwice, sodass folgendes gilt:  
+//val plusOne = (x: Int) => x + 1  
+//val result = applyTwice(plusOne)(5) // Ergebnis: 7  
+//applyTwice(plusOne) 返回一个函数 x => plusOne(plusOne(x)). 调用 (...) (5) 就变成 plusOne(plusOne(5)). plusOne(5) 是 6，再调用一次 plusOne(6) 是 7  
+val applyTwice: (Int => Int) => Int => Int = f => x => f(f(x))  
+val applyTwice_2: (Int => Int) => Int => Int = f => x = {f(f(x))}  
+  
+// (Int => Int) => Int => Int 这是 applyTwice 的类型签名： 接收一个函数 f，其类型是 Int => Int（接收 Int 返回 Int）  
+//    返回一个新函数（仍然是 Int => Int）. 这个新函数再接收一个 Int，最终返回一个 Int// (Int => Int) => Int => Int  is equivalent to the following implementation: applyTwice(f)(x) == f(f(x))  
+  
+// f => x => f(f(x)) is the implementation of applyTwice.  
+// 这个新函数接收一个 Int 参数 x，并返回 f(f(x)) 的结果。  
+// val applyTwice: (Int => Int) => Int => Int = f => x => f(f(x))  
+// 中第一个 = 的意思为 将右边的函数表达式赋值给左边的变量applyTwice  
+// f =>  接收一个函数 f: Int => Int// x => f(f(x))  返回一个函数 f(f(x))，接收参数 x: Int// f(f(x)) 对 x 应用函数两次（f(f(x))）  
+  
+// is equivalent to the following implementation:  
+//def applyTwice(f: Int => Int): Int => Int = {  
+//  def resultFunction(x: Int): Int = {  
+//    f(f(x))  
+//  }  
+//  resultFunction  
+//}  
+  
+//def applyTwice(f: Int => Int): Int => Int = {  
+//  def inner(x: Int): Int = {  
+//    val first = f(x)  
+//    val second = f(first)  
+//    second  
+//  }  
+//  inner  
+//}  
+  
+  
+  
+  
+//2. Schreiben Sie eine Funktion createAdder, sodass folgendes gilt:  
+//val add5 = createAdder(5)  
+//add5(3) // Ergebnis: 8  
+val createAdder: Int => (Int => Int) = x => y => x + y  
+val createAdder_2: Int => (Int => Int) = x => {y => x + y}  
+  
+  
+  
+  
+//3. Schreiben Sie eine Funktion processString, sodass folgendes gilt:  
+//val shout = (s: String) => s.toUpperCase + "!"  
+//processString(shout) // "SCALA!"  
+  
+val processString: (String => String) => String = f => f("scala")
+
+```
+
 # 11 Funktionen als Rückgabe
 
 ![](image/Pasted%20image%2020250502221150.png)
